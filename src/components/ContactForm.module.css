@@ -1,0 +1,109 @@
+.container {
+  background: rgba(4, 4, 5, 0.8);
+  border: 1px solid rgba(0, 255, 204, 0.3);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: 24px;
+  border-radius: 8px;
+  width: 350px;
+  color: #fff;
+  font-family: monospace;
+  box-shadow: 0 0 20px rgba(0, 255, 204, 0.1);
+  pointer-events: auto; /* Let clicks interact with the form */
+}
+
+.title {
+  color: var(--accent, #ff5722);
+  margin-bottom: 12px;
+  font-size: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  border-bottom: 1px solid rgba(0, 255, 204, 0.2);
+  padding-bottom: 8px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.input, .textarea {
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  padding: 10px;
+  color: #ffffff;
+  font-family: sans-serif;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.2s;
+  width: 100%;
+}
+
+.input:focus, .textarea:focus {
+  border-color: var(--accent, #ff5722);
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.button {
+  background-color: var(--accent, #ff5722);
+  color: #000;
+  border: none;
+  border-radius: 4px;
+  padding: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  transition: opacity 0.2s;
+}
+
+.button:hover:not(:disabled) {
+  opacity: 0.8;
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.success {
+  color: #00ffcc;
+  margin-bottom: 16px;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.error {
+  color: #ff3333;
+  margin-bottom: 16px;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.socials {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(0, 255, 204, 0.2);
+}
+
+.socialIcon {
+  color: rgba(255, 255, 255, 0.6);
+  transition: color 0.2s, transform 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.socialIcon:hover {
+  color: #ffffff;
+  transform: scale(1.1);
+}
