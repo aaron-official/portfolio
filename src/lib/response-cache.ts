@@ -6,12 +6,14 @@ const llmCache = new LRUCache<string, string>({
   ttl: 1000 * 60 * 60 * 24, // 24 hours
 });
 
+type Message = { role: string; content: string; [key: string]: unknown };
+
 /**
  * Generates a unique key based on the conversation history.
  * We strip out unpredictable fields like 'id' to ensure exact matches work
  * even if the frontend generates different IDs for the same text.
  */
-export function generateCacheKey(messages: any[]): string {
+export function generateCacheKey(messages: Message[]): string {
   const normalizedMessages = messages.map(m => ({
     role: m.role,
     content: m.content.trim().toLowerCase(),
@@ -19,12 +21,12 @@ export function generateCacheKey(messages: any[]): string {
   return JSON.stringify(normalizedMessages);
 }
 
-export function getCachedResponse(messages: any[]): string | undefined {
+export function getCachedResponse(messages: Message[]): string | undefined {
   const key = generateCacheKey(messages);
   return llmCache.get(key);
 }
 
-export function setCachedResponse(messages: any[], responseText: string): void {
+export function setCachedResponse(messages: Message[], responseText: string): void {
   const key = generateCacheKey(messages);
   llmCache.set(key, responseText);
 }

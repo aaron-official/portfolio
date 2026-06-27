@@ -59,7 +59,7 @@ export default function Scene({ timeOfDay, isChatOpen }: SceneProps) {
 
   const handlePlayerMove = (pos: THREE.Vector3) => {
     let closestPoi = null;
-    let minDistance = 4.0; // Activation radius
+    const minDistance = 4.0; // Activation radius
 
     for (const poi of POIS) {
       // Calculate distance ignoring Y axis for generous triggering
