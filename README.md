@@ -1,12 +1,13 @@
 # Aaron's 3D AI Digital Twin Portfolio
 
-A modern, interactive 3D portfolio website featuring an AI-powered "Digital Twin" chatbot and a secure contact system. Built with Next.js, React Three Fiber, and the Vercel AI SDK.
+A modern, interactive 3D portfolio website featuring an AI-powered "Digital Twin" and a secure contact system. Built with Next.js, React Three Fiber, and the Vercel AI SDK.
 
 ## 🚀 Features
 
 - **Interactive 3D Environment:** Built with React Three Fiber (`@react-three/fiber`) and Drei, offering an immersive user experience.
 - **AI Digital Twin:** An integrated, streaming AI chatbot powered by the Vercel AI SDK and OpenRouter. It acts as a digital twin to answer questions about skills and experience.
 - **Secure Contact Form:** A direct-to-device contact pipeline using the Pushover API, complete with frontend state management and backend validation.
+- **Cost-Optimized AI Caching:** Implements an exact-match in-memory LRU cache interceptor to instantly serve identical conversation prompts, significantly reducing API token consumption and lowering latency.
 - **API Rate Limiting:** Custom in-memory LRU caching to strictly enforce rate limits (protecting both the LLM tokens and the contact form from spam).
 - **Robust Test Suite:** Fully tested using Vitest and React Testing Library for components, API routes, and utilities.
 
