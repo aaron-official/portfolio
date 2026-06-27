@@ -17,6 +17,8 @@ const limiter = rateLimit({
   uniqueTokenPerInterval: 500,
 });
 
+import { getCachedResponse, setCachedResponse } from '@/lib/response-cache';
+
 export async function POST(req: Request) {
   const ip = req.headers.get('x-forwarded-for') ?? '127.0.0.1';
   try {
@@ -26,6 +28,15 @@ export async function POST(req: Request) {
   }
 
   const { messages } = await req.json();
+
+  // 1. Check for exact match in cache to save tokens
+  const cached = getCachedResponse(messages);
+  if (cached) {
+    return new Response(cached, {
+      status: 200,
+      headers: { 'Content-Type': 'text/plain; charset=utf-8' },
+    });
+  }
 
   const result = streamText({
     model: openrouter.chat('google/gemma-4-31b-it:free,meta-llama/llama-3.3-70b-instruct:free,qwen/qwen3-next-80b-a3b-instruct:free,openrouter/auto'),
@@ -54,6 +65,10 @@ export async function POST(req: Request) {
     `,
     messages,
     maxOutputTokens: 150, // Limit output to prevent token waste and long responses
+    onFinish: ({ text }) => {
+      // 2. Cache the completed response for future identical questions
+      setCachedResponse(messages, text);
+    },
   });
 
   return result.toTextStreamResponse();
