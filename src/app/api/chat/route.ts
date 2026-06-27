@@ -9,7 +9,22 @@ const openrouter = createOpenRouter({
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
 
+import rateLimit from '@/lib/rate-limit';
+import { NextResponse } from 'next/server';
+
+const limiter = rateLimit({
+  interval: 60 * 1000, // 1 minute
+  uniqueTokenPerInterval: 500,
+});
+
 export async function POST(req: Request) {
+  const ip = req.headers.get('x-forwarded-for') ?? '127.0.0.1';
+  try {
+    await limiter.check(10, ip); // 10 requests per minute
+  } catch {
+    return NextResponse.json({ error: 'Rate limit exceeded. Please wait a moment.' }, { status: 429 });
+  }
+
   const { messages } = await req.json();
 
   const result = streamText({
@@ -34,10 +49,11 @@ export async function POST(req: Request) {
     Guidelines:
     - Respond in a professional, concise, and slightly "edgy/tech-forward" tone.
     - Speak in the first person ("I am Aaron", "My experience", "I built").
-    - Keep responses short, ideally 1-3 sentences. Don't overwhelm the user with long paragraphs.
+    - Keep responses short, ideally 1-3 sentences (STRICT MAXIMUM of ~100 words). If you generate long paragraphs, your response will be abruptly cut off.
     - If you don't know the answer, or if the user asks how to contact me, politely direct them to close the chat and click on the "Contact Me" panel on the island to send me a direct message. DO NOT provide an email address.
     `,
     messages,
+    maxOutputTokens: 150, // Limit output to prevent token waste and long responses
   });
 
   return result.toTextStreamResponse();
