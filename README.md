@@ -1,36 +1,75 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Aaron's 3D AI Digital Twin Portfolio
 
-## Getting Started
+A modern, interactive 3D portfolio website featuring an AI-powered "Digital Twin" chatbot and a secure contact system. Built with Next.js, React Three Fiber, and the Vercel AI SDK.
 
-First, run the development server:
+## 🚀 Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Interactive 3D Environment:** Built with React Three Fiber (`@react-three/fiber`) and Drei, offering an immersive user experience.
+- **AI Digital Twin:** An integrated, streaming AI chatbot powered by the Vercel AI SDK and OpenRouter. It acts as a digital twin to answer questions about skills and experience.
+- **Secure Contact Form:** A direct-to-device contact pipeline using the Pushover API, complete with frontend state management and backend validation.
+- **API Rate Limiting:** Custom in-memory LRU caching to strictly enforce rate limits (protecting both the LLM tokens and the contact form from spam).
+- **Robust Test Suite:** Fully tested using Vitest and React Testing Library for components, API routes, and utilities.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🛠️ Tech Stack
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Framework:** [Next.js](https://nextjs.org/) (App Router)
+- **Language:** TypeScript
+- **3D Graphics:** [Three.js](https://threejs.org/), [React Three Fiber](https://docs.pmnd.rs/react-three-fiber/)
+- **AI Integration:** [Vercel AI SDK](https://sdk.vercel.ai/docs), OpenRouter
+- **Testing:** [Vitest](https://vitest.dev/), React Testing Library
+- **Styling:** CSS Modules
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## ⚙️ Getting Started
 
-## Learn More
+### Prerequisites
 
-To learn more about Next.js, take a look at the following resources:
+- Node.js 18+ and npm/yarn/pnpm
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Installation
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/aaron-official/portfolio.git
+   cd portfolio
+   ```
 
-## Deploy on Vercel
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+3. Configure Environment Variables:
+   Copy the example environment file and fill in your keys:
+   ```bash
+   cp .env.example .env.local
+   ```
+   **Required Variables:**
+   - `OPENROUTER_API_KEY`: For the AI Digital Twin.
+   - `PUSHOVER_USER`: Your Pushover user key.
+   - `PUSHOVER_TOKEN`: Your Pushover application token.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+4. Start the development server:
+   ```bash
+   npm run dev
+   ```
+   Navigate to [http://localhost:3000](http://localhost:3000).
+
+## 🧪 Testing
+
+The project uses Vitest for lightning-fast testing.
+
+- Run all tests: `npm run test`
+- Run tests with UI: `npm run test:ui`
+- Generate coverage report: `npm run test:coverage`
+
+## 📁 Project Structure
+
+- `/src/app` - Next.js App Router pages and API endpoints (`/api/chat`, `/api/contact`).
+- `/src/components` - React components (UI forms, 3D Canvas, Player, Scene).
+- `/src/lib` - Utility functions (e.g., Rate Limiter).
+- `/__tests__` - Isolated test suites for APIs, components, and utilities.
+- `/public` - Static assets and 3D models.
+
+## 📄 License
+
+This project is open-source and available under the [MIT License](LICENSE).
