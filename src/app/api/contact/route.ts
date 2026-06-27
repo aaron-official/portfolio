@@ -11,10 +11,10 @@ export async function POST(request: Request) {
       );
     }
 
-    const PUSHOVER_APP_TOKEN = process.env.PUSHOVER_APP_TOKEN;
-    const PUSHOVER_USER_KEY = process.env.PUSHOVER_USER_KEY;
+    const PUSHOVER_TOKEN = process.env.PUSHOVER_TOKEN;
+    const PUSHOVER_USER = process.env.PUSHOVER_USER;
 
-    if (!PUSHOVER_APP_TOKEN || !PUSHOVER_USER_KEY) {
+    if (!PUSHOVER_TOKEN || !PUSHOVER_USER) {
       console.warn('Pushover tokens are not configured in .env.local');
       // We simulate success if tokens are missing so the UI still works during development
       return NextResponse.json({ success: true, warning: 'Pushover tokens missing.' });
@@ -26,8 +26,8 @@ export async function POST(request: Request) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        token: PUSHOVER_APP_TOKEN,
-        user: PUSHOVER_USER_KEY,
+        token: PUSHOVER_TOKEN,
+        user: PUSHOVER_USER,
         title: `New Portfolio Message from ${name}`,
         message: `Contact: ${contact}\n\nMessage:\n${message}`,
         priority: 0, // Normal priority
