@@ -3,7 +3,7 @@
 import { useState } from "react";
 import styles from "./ContactForm.module.css";
 
-export function ContactForm() {
+export function ContactForm({ showSocials = true }: { showSocials?: boolean }) {
   const [formData, setFormData] = useState({ name: "", contact: "", message: "" });
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
@@ -82,6 +82,7 @@ export function ContactForm() {
         </form>
       )}
 
+      {showSocials && (
       <div className={styles.socials}>
         <a 
           href="https://github.com/aaron-official/" 
@@ -106,6 +107,7 @@ export function ContactForm() {
           </svg>
         </a>
       </div>
+      )}
     </div>
   );
 }

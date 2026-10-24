@@ -8,43 +8,45 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  cursor: crosshair; /* Gamified cursor */
 }
 
 html, body {
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
-  font-family: system-ui, sans-serif;
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden; /* No scrolling in 3D mode */
-  position: relative;
+  background-color: #0e0e0c;
+  color: #ebe7dc;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Fullscreen canvas container */
-#root, main {
-  width: 100vw;
-  height: 100vh;
-  position: absolute;
-  top: 0;
-  left: 0;
-}
+/* Slim scrollbar in the theme colours */
+html { scrollbar-width: thin; scrollbar-color: #3a3832 #0e0e0c; }
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: #0e0e0c; }
+::-webkit-scrollbar-thumb { background: #3a3832; border-radius: 8px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
 
-/* Noise overlay */
-body::after {
-  content: "";
+/* ---- 3D world (mounted only after "Enter 3D World") ---- */
+.world-root, .world-root main {
   position: fixed;
-  top: 0;
-  left: 0;
+  inset: 0;
   width: 100vw;
   height: 100vh;
+  z-index: 1000;
+  background: var(--bg-primary);
+  cursor: crosshair; /* Gamified cursor */
+}
+.world-root * { cursor: crosshair; }
+.world-root::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
   opacity: 0.04;
-  pointer-events: none !important;
-  z-index: 9999;
 }
+.world-exit { position: fixed; top: 16px; left: 16px; z-index: 1100; padding: 8px 14px; font-size: 0.85rem; color: #fff; background: rgba(4, 4, 5, 0.7); border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 6px; cursor: pointer; }
+.world-loading { position: fixed; inset: 0; z-index: 1000; display: grid; place-items: center; background: #0b0d12; color: #fff; font-family: monospace; }
+
 
 /* Hologram UI Styles */
 .hologram-ui {

@@ -11,7 +11,7 @@ import { Bird } from "./models/Bird";
 import { Plane } from "./models/Plane";
 import { WanderingFox } from "./models/WanderingFox";
 import { WanderingRobot } from "./models/WanderingRobot";
-import { TimeOfDay } from "../app/page";
+import { TimeOfDay } from "./World";
 import { ContactForm } from "./ContactForm";
 
 // Remapped coordinates to spread details all over the highland
@@ -24,11 +24,12 @@ const POI_CONTENT: Record<string, React.ReactNode> = {
   about: (
     <div className="hologram-ui">
       <h2>About Aaron</h2>
-      <p>I build robust applications combining backend logic, frontend design, and modern deployment pipelines.</p>
+      <p>Software engineer in Kampala, building mobile-money payment systems and AI tools since 2021.</p>
       <ul>
-        <li>Full Stack Python Developer</li>
-        <li>Agentic AI Engineer</li>
-        <li>Systems Architect</li>
+        <li>Software Engineer</li>
+        <li>Fintech Systems</li>
+        <li>Full-Stack</li>
+        <li>AI Engineer</li>
       </ul>
       <p style={{ marginTop: '16px', fontStyle: 'italic', color: 'rgba(255, 255, 255, 0.6)' }}>
         Ask my Digital Twin in the corner about my career journey and featured projects!
