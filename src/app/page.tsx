@@ -1,4 +1,5 @@
 import { EnterWorld } from "../components/EnterWorld";
+import { Puzzle } from "../components/Puzzle";
 import { ContactForm } from "../components/ContactForm";
 import { LocalTime } from "../components/LocalTime";
 import { TechCarousel } from "../components/TechCarousel";
@@ -71,6 +72,7 @@ export default function Home() {
       </header>
 
       <section className="hero">
+        <Puzzle className="pz" />
         <h1 aria-label="Aaron Kakembo">
           <span className="line"><span>Aaron</span></span>
           <span className="line"><span><em>Kakembo</em></span></span>
