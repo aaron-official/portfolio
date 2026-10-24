@@ -1,30 +1,31 @@
-# Aaron's 3D AI Digital Twin Portfolio
+# Aaron's Portfolio
 
-A modern, interactive 3D portfolio website featuring an AI-powered "Digital Twin" and a secure contact system. Built with Next.js, React Three Fiber, and the Vercel AI SDK.
+A fast landing page for Aaron Kakembo, with an optional 3D island and an AI "digital twin" that answers questions about his work. Built with Next.js, React Three Fiber and the Vercel AI SDK.
 
 ## 🚀 Features
 
-- **Interactive 3D Environment:** Built with React Three Fiber (`@react-three/fiber`) and Drei, offering an immersive user experience.
-- **AI Digital Twin:** An integrated, streaming AI chatbot powered by the Vercel AI SDK and OpenRouter. It acts as a digital twin to answer questions about skills and experience.
-- **Secure Contact Form:** A direct-to-device contact pipeline using the Pushover API, complete with frontend state management and backend validation.
-- **Cost-Optimized AI Caching:** Implements an exact-match in-memory LRU cache interceptor to instantly serve identical conversation prompts, significantly reducing API token consumption and lowering latency.
-- **API Rate Limiting:** Custom in-memory LRU caching to strictly enforce rate limits (protecting both the LLM tokens and the contact form from spam).
-- **Robust Test Suite:** Fully tested using Vitest and React Testing Library for components, API routes, and utilities.
+- **Lightweight landing page:** server-rendered hero, tools carousel, selected work, about, and contact. The first load is about 280 KB gzipped. The page is type and hairlines only, with CSS scroll-driven animation (reading progress, rising sections) and no animation library.
+- **Portrait puzzle:** a 3×3 sliding puzzle of Aaron's photo in the hero. It is shuffled with legal moves so it is always solvable, goes from black and white to colour on hover, and reveals the colour photo when solved.
+- **Optional 3D island:** the original React Three Fiber world is loaded only after "Enter my island" is clicked, so Three.js and about 5 MB of models never slow the first visit.
+- **AI Digital Twin:** a streaming chatbot (Vercel AI SDK and OpenRouter) that answers from a fixed set of facts about Aaron's projects. On the landing page the twin loads in the background after the page is ready, then greets the visitor and comments when they reach the work section and the footer. It stays off on data-saver and 2G connections.
+- **Contact form:** messages reach Aaron through the Pushover API, with validation and rate limiting.
+- **Cost-optimised AI:** an exact-match in-memory LRU cache for repeated prompts, and per-client rate limiting for the chat and contact routes.
+- **Tests:** Vitest and React Testing Library for components, API routes and utilities.
 
 ## 🛠️ Tech Stack
 
-- **Framework:** [Next.js](https://nextjs.org/) (App Router)
-- **Language:** TypeScript
-- **3D Graphics:** [Three.js](https://threejs.org/), [React Three Fiber](https://docs.pmnd.rs/react-three-fiber/)
-- **AI Integration:** [Vercel AI SDK](https://sdk.vercel.ai/docs), OpenRouter
-- **Testing:** [Vitest](https://vitest.dev/), React Testing Library
-- **Styling:** CSS Modules
+- **Framework:** [Next.js](https://nextjs.org/) 16 (App Router), React, TypeScript
+- **3D:** [Three.js](https://threejs.org/), [React Three Fiber](https://docs.pmnd.rs/react-three-fiber/), Drei
+- **AI:** [Vercel AI SDK](https://sdk.vercel.ai/docs), OpenRouter
+- **Styling:** plain CSS and CSS Modules, with Instrument Serif self-hosted through `next/font`
+- **Tests:** [Vitest](https://vitest.dev/), React Testing Library
+- **Deploy:** Docker on Fly.io
 
 ## ⚙️ Getting Started
 
 ### Prerequisites
 
-- Node.js 18+ and npm/yarn/pnpm
+- Node.js 20+ and npm
 
 ### Installation
 
@@ -39,38 +40,59 @@ A modern, interactive 3D portfolio website featuring an AI-powered "Digital Twin
    npm install
    ```
 
-3. Configure Environment Variables:
-   Copy the example environment file and fill in your keys:
+3. Configure environment variables:
    ```bash
    cp .env.example .env.local
    ```
-   **Required Variables:**
-   - `OPENROUTER_API_KEY`: For the AI Digital Twin.
-   - `PUSHOVER_USER`: Your Pushover user key.
-   - `PUSHOVER_TOKEN`: Your Pushover application token.
+   - `OPENROUTER_API_KEY`: for the digital twin.
+   - `PUSHOVER_USER` and `PUSHOVER_TOKEN`: for the contact form.
 
-4. Start the development server:
+4. Start the dev server:
    ```bash
    npm run dev
    ```
-   Navigate to [http://localhost:3000](http://localhost:3000).
+   Open [http://localhost:3000](http://localhost:3000).
 
-## 🧪 Testing
+## 🧪 Scripts
 
-The project uses Vitest for lightning-fast testing.
+| Command | What it does |
+| --- | --- |
+| `npm run dev` | Development server |
+| `npm run build` / `npm start` | Production build and server |
+| `npm run lint` | ESLint |
+| `npm run test` | Vitest, once |
+| `npm run test:watch` / `test:ui` / `test:coverage` | Watch mode, UI, coverage |
 
-- Run all tests: `npm run test`
-- Run tests with UI: `npm run test:ui`
-- Generate coverage report: `npm run test:coverage`
+GitHub Actions (`.github/workflows/ci.yml`) runs `npm run lint` and `npm run test` on every push and pull request.
+
+## 🚢 Deployment
+
+The app is deployed to Fly.io from the `Dockerfile` and `fly.toml`, by hand:
+
+```bash
+fly deploy
+```
+
+There is no deploy workflow in CI, so nothing deploys when you push.
 
 ## 📁 Project Structure
 
-- `/src/app` - Next.js App Router pages and API endpoints (`/api/chat`, `/api/contact`).
-- `/src/components` - React components (UI forms, 3D Canvas, Player, Scene).
-- `/src/lib` - Utility functions (e.g., Rate Limiter).
-- `/__tests__` - Isolated test suites for APIs, components, and utilities.
-- `/public` - Static assets and 3D models.
+- `src/app`: pages and API routes (`/api/chat`, `/api/contact`). `page.tsx` is the landing page, `landing.css` its styles, `globals.css` the base and 3D-world styles, and `fonts/` the self-hosted typeface.
+- `src/components`:
+  - `World.tsx` and `Scene.tsx`: the 3D island, with models in `models/`.
+  - `EnterWorld.tsx`: loads the island on demand.
+  - `Chat.tsx` and `LandingChat.tsx`: the digital twin, in the island and on the landing page (deferred load, greetings, nudges).
+  - `Puzzle.tsx`, `TechCarousel.tsx` with `tech-icons.ts`, `LocalTime.tsx`, `ContactForm.tsx`: landing page pieces.
+- `src/lib`: utilities such as the rate limiter and response cache.
+- `__tests__`: tests for APIs, components and utilities.
+- `public`: portrait images and the 3D models.
+
+## 📝 Editing the content
+
+- Projects, the stack list and the hero text are at the top of `src/app/page.tsx`.
+- What the digital twin knows lives in the system prompt in `src/app/api/chat/route.ts`. It is told to state only facts written there, so keep it in step with the page.
+- The twin's greetings and section comments are lists at the top of `src/components/LandingChat.tsx`.
 
 ## 📄 License
 
-This project is open-source and available under the [MIT License](LICENSE).
+This project is open source under the [MIT License](LICENSE).
