@@ -150,6 +150,26 @@
   @keyframes drift-left { to { transform: translateX(-16vw); } }
   .about .big, .contact h2 { animation: rise linear both; animation-timeline: view(); animation-range: entry 0% cover 30%; }
   @keyframes rise { from { opacity: 0; transform: translateY(40px); } }
+
+  /* reading progress */
+  .lite::before { content: ""; position: fixed; z-index: 60; top: 0; left: 0; right: 0; height: 3px; background: var(--accent); transform-origin: 0 50%; animation: progress linear both; animation-timeline: scroll(root); pointer-events: none; }
+  @keyframes progress { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+  /* hero: portrait drifts up and fades, the intro line lets go */
+  .pz { animation: fade 1s 0.5s both, pz-away linear both; animation-timeline: auto, scroll(root); animation-range: normal, 0 80vh; }
+  @keyframes pz-away { to { transform: translateY(-70px) scale(0.92); opacity: 0.15; } }
+  .hero-foot { animation: fade 1s 0.7s both, foot-away linear both; animation-timeline: auto, scroll(root); animation-range: normal, 10vh 70vh; }
+  @keyframes foot-away { to { opacity: 0; transform: translateY(24px); } }
+
+  /* work rows, section heads, stack, contact blocks rise into place as they enter */
+  .row, .sec-head > span, .stack li, .connect, .portal-title, .foot { animation: rise-sm linear both; animation-timeline: view(); animation-range: entry 0% entry 70%; }
+  .sec-head > span:last-child { animation-name: rise-sm-r; }
+  .portal-title { animation-name: portal-in; animation-range: entry 10% cover 40%; }
+  .tech { animation: tech-in linear both; animation-timeline: view(); animation-range: entry 0% entry 80%; }
+  @keyframes rise-sm { from { opacity: 0; transform: translateY(48px); } }
+  @keyframes rise-sm-r { from { opacity: 0; transform: translateX(32px); } }
+  @keyframes portal-in { from { opacity: 0; transform: translateX(-6vw); } }
+  @keyframes tech-in { from { opacity: 0; } }
 }
 
 /* touch: no hover, so rows are always open */
