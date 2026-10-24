@@ -1,6 +1,7 @@
 import { EnterWorld } from "../components/EnterWorld";
 import { ContactForm } from "../components/ContactForm";
 import { LocalTime } from "../components/LocalTime";
+import { TechCarousel } from "../components/TechCarousel";
 import "./landing.css";
 
 const WORK = [
@@ -86,6 +87,14 @@ export default function Home() {
           </ul>
           <div className="scroll mono">Scroll ↓</div>
         </div>
+      </section>
+
+      <section className="tools">
+        <div className="sec-head mono">
+          <span>Tools</span>
+          <span>(Worked with)</span>
+        </div>
+        <TechCarousel />
       </section>
 
       <section id="work" className="work">
