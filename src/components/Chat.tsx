@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import styles from "./Chat.module.css";
 import ReactMarkdown from "react-markdown";
 import { Canvas } from "@react-three/fiber";
@@ -16,13 +16,40 @@ type Message = {
 interface ChatProps {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
+  /** When given, the toggle stays hidden until the robot has loaded, then it pops in with one of these lines. */
+  greetings?: string[];
+  /** A one-off line to show (once the twin is ready) when the visitor reaches something specific on the page. */
+  nudge?: string | null;
 }
 
-export default function Chat({ isOpen, setIsOpen }: ChatProps) {
+export default function Chat({ isOpen, setIsOpen, greetings, nudge }: ChatProps) {
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const [robotReady, setRobotReady] = useState(!greetings);
+  const [greeting, setGreeting] = useState<string | null>(null);
+  const markReady = useCallback(() => setRobotReady(true), []);
+
+  // the hello when the twin first appears, unless a nudge is already waiting
+  useEffect(() => {
+    if (!greetings || !robotReady || nudge) return;
+    setGreeting(greetings[Math.floor(Math.random() * greetings.length)]);
+    // pick once, when the robot first appears
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [robotReady]);
+
+  useEffect(() => {
+    if (nudge && robotReady) setGreeting(nudge);
+  }, [nudge, robotReady]);
+
+  // every bubble goes away after a while
+  useEffect(() => {
+    if (!greeting) return;
+    const t = setTimeout(() => setGreeting(null), 9000);
+    return () => clearTimeout(t);
+  }, [greeting]);
+
   // r3f force-loses a canvas's WebGL context when it unmounts. In dev, StrictMode and Fast Refresh remount while reusing the same <canvas>,
   // which left the robot blank. A new key gives a fresh <canvas> after every effect pass and after any real context loss.
   const [canvasKey, setCanvasKey] = useState(0);
@@ -84,6 +111,11 @@ export default function Chat({ isOpen, setIsOpen }: ChatProps) {
 
   return (
     <div className={styles.chatContainer}>
+      {greeting && !isOpen && (
+        <button type="button" className={styles.bubble} onClick={() => setIsOpen(true)}>
+          {greeting}
+        </button>
+      )}
       {isOpen && (
         <div className={styles.chatWindow}>
           <div className={styles.chatHeader}>
@@ -139,7 +171,7 @@ export default function Chat({ isOpen, setIsOpen }: ChatProps) {
 
       {/* Floating Action Button */}
       <button 
-        className={`${styles.chatToggle} ${isOpen ? styles.hidden : ''}`}
+        className={`${styles.chatToggle} ${isOpen ? styles.hidden : ''} ${!robotReady ? styles.pending : greetings ? styles.pop : ''}`}
         onClick={() => setIsOpen(true)}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
@@ -159,7 +191,7 @@ export default function Chat({ isOpen, setIsOpen }: ChatProps) {
           <PerspectiveCamera makeDefault position={[0, 1, 8]} />
           <ambientLight intensity={1.5} />
           <directionalLight position={[5, 10, 5]} intensity={2} color="#ffffff" />
-          {!isOpen && <ChatRobot hovered={isHovered} />}
+          {!isOpen && <ChatRobot hovered={isHovered} onReady={markReady} />}
         </Canvas>
         )}
       </button>

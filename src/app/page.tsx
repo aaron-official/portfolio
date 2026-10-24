@@ -2,6 +2,7 @@ import { EnterWorld } from "../components/EnterWorld";
 import { Puzzle } from "../components/Puzzle";
 import { ContactForm } from "../components/ContactForm";
 import { LocalTime } from "../components/LocalTime";
+import { LandingChat } from "../components/LandingChat";
 import { TechCarousel } from "../components/TechCarousel";
 import "./landing.css";
 
@@ -178,12 +179,13 @@ export default function Home() {
         </div>
       </section>
 
-      <footer className="foot mono">
+      <footer id="footer" className="foot mono">
         <span>© {new Date().getFullYear()} Aaron Kakembo</span>
         <span className="foot-links">
           <a href="https://github.com/aaron-official/" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
         </span>
       </footer>
+      <LandingChat />
     </div>
   );
 }

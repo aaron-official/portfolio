@@ -5,13 +5,18 @@ import { useGLTF, useAnimations } from "@react-three/drei";
 import * as THREE from "three";
 import { SkeletonUtils } from "three-stdlib";
 
-export function ChatRobot({ hovered }: { hovered: boolean }) {
+export function ChatRobot({ hovered, onReady }: { hovered: boolean; onReady?: () => void }) {
   const group = useRef<THREE.Group>(null);
   const { scene, animations } = useGLTF("/models/RobotExpressive.glb");
   const { actions } = useAnimations(animations, group);
 
   // Clone the scene so it doesn't share state/scale with WanderingRobot
   const clone = useMemo(() => SkeletonUtils.clone(scene), [scene]);
+
+  // This component only renders once the model has loaded, so mounting means the robot is ready
+  useEffect(() => {
+    onReady?.();
+  }, [onReady]);
 
   // Autonomous waving state
   const [autoWave, setAutoWave] = useState(false);
