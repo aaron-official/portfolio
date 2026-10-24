@@ -63,12 +63,12 @@ export default function Home() {
   return (
     <div className="lite">
       <header className="bar mono">
-        <div>Aaron<br />Kakembo</div>
+        <div>Aaron <br />Kakembo</div>
         <nav>
           <a href="#work">Work</a><br />
           <a href="#contact">Contact</a>
         </nav>
-        <div>Kampala, UG<br />0.35° N 32.58° E</div>
+        <div>Kampala, UG<br /><span className="coords">0.35° N 32.58° E</span></div>
         <div className="clock"><i aria-hidden="true" /> <LocalTime /></div>
       </header>
 
