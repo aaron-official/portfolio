@@ -60,7 +60,7 @@
 @keyframes up { from { transform: translateY(105%); } }
 .hero-foot { display: grid; grid-template-columns: 2fr 1fr auto; gap: 16px; align-items: end; margin-top: 28px; padding-top: 16px; border-top: 1px solid var(--rule); animation: fade 1s 0.7s both; }
 @keyframes fade { from { opacity: 0; } }
-.statement { font: 400 clamp(1.3rem, 2.4vw, 2.1rem)/1.15 var(--display); max-width: 20em; }
+.statement { font: 400 clamp(1.3rem, 2.4vw, 2.1rem)/1.15 var(--display); max-width: 27em; }
 .statement em, .big em, .contact h2 em { color: var(--accent); }
 .roles { list-style: none; color: var(--muted); justify-self: end; margin-right: clamp(24px, 6vw, 96px); }
 .scroll { text-align: right; color: var(--muted); }
