@@ -23,6 +23,10 @@ export default function Chat({ isOpen, setIsOpen }: ChatProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  // r3f force-loses a canvas's WebGL context when it unmounts. In dev, StrictMode and Fast Refresh remount while reusing the same <canvas>,
+  // which left the robot blank. A new key gives a fresh <canvas> after every effect pass and after any real context loss.
+  const [canvasKey, setCanvasKey] = useState(0);
+  useEffect(() => setCanvasKey((k) => k + 1), []);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Auto-scroll to bottom of messages
@@ -141,12 +145,23 @@ export default function Chat({ isOpen, setIsOpen }: ChatProps) {
         onMouseLeave={() => setIsHovered(false)}
         aria-label="Open Chat"
       >
-        <Canvas style={{ width: '100%', height: '100%' }}>
+        {canvasKey > 0 && (
+        <Canvas
+          key={canvasKey}
+          style={{ width: '100%', height: '100%' }}
+          onCreated={({ gl }) => {
+            gl.domElement.addEventListener("webglcontextlost", (e) => {
+              e.preventDefault();
+              setCanvasKey((k) => k + 1);
+            });
+          }}
+        >
           <PerspectiveCamera makeDefault position={[0, 1, 8]} />
           <ambientLight intensity={1.5} />
           <directionalLight position={[5, 10, 5]} intensity={2} color="#ffffff" />
           {!isOpen && <ChatRobot hovered={isHovered} />}
         </Canvas>
+        )}
       </button>
     </div>
   );
