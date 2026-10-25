@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
 const N = 3;
+const MY_BEST = 34; // Aaron's own record, the number to beat
 const HELP_AFTER = 100; // moves before the auto-solve option appears
 const TOTAL = N * N;
 const SOLVED = Array.from({ length: TOTAL }, (_, i) => i); // value TOTAL-1 is the gap
@@ -56,6 +57,13 @@ function solve(start: number[]): number[] {
     limit = r;
   }
   return [];
+}
+
+function verdict(moves: number, helped: boolean) {
+  if (helped) return `Solved for you. I did it in ${MY_BEST} moves. Your turn?`;
+  if (moves < MY_BEST) return `${moves} moves. You beat my ${MY_BEST}. I'm impressed.`;
+  if (moves === MY_BEST) return `${moves} moves, same as my best. Respect.`;
+  return `Solved in ${moves}. I did it in ${MY_BEST}. Beat that?`;
 }
 
 // shuffle by making random legal moves, so the result is always solvable
@@ -160,7 +168,7 @@ export function Puzzle({ className }: { className?: string }) {
       <figcaption className="mono pz-cap" aria-live="polite">
         {solved ? (
           <>
-            <span>{helped ? "Solved for you. Hi, I'm Aaron." : `Solved in ${moves} moves. Hi, I'm Aaron.`}</span>
+            <span>{verdict(moves, helped)}</span>
             <button type="button" onClick={shuffle}>Again ↻</button>
           </>
         ) : (
