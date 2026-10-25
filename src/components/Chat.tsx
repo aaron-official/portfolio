@@ -3,9 +3,14 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import styles from "./Chat.module.css";
 import ReactMarkdown from "react-markdown";
-import { Canvas } from "@react-three/fiber";
-import { PerspectiveCamera } from "@react-three/drei";
-import { ChatRobot } from "./models/ChatRobot";
+import dynamic from "next/dynamic";
+import { CanvasBoundary } from "./CanvasBoundary";
+import { hasWebGL } from "../lib/webgl";
+
+const RobotCanvas = dynamic(() => import("./RobotCanvas"), { ssr: false });
+
+// how long the robot gets to load before the chat button settles for the photo
+const ROBOT_TIMEOUT_MS = 12000;
 
 type Message = {
   id: string;
@@ -20,14 +25,18 @@ interface ChatProps {
   greetings?: string[];
   /** A one-off line to show (once the twin is ready) when the visitor reaches something specific on the page. */
   nudge?: string | null;
+  /** Skip the 3D robot and use the photo instead (data saver, slow connections). */
+  lite?: boolean;
 }
 
-export default function Chat({ isOpen, setIsOpen, greetings, nudge }: ChatProps) {
+export default function Chat({ isOpen, setIsOpen, greetings, nudge, lite }: ChatProps) {
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
-  const [robotReady, setRobotReady] = useState(!greetings);
+  // no WebGL, a slow connection, or a robot that failed or took too long: the chat button shows the photo instead and everything else works
+  const [noRobot, setNoRobot] = useState(() => !!lite || !hasWebGL());
+  const [robotReady, setRobotReady] = useState(!greetings || noRobot);
   const [greeting, setGreeting] = useState<string | null>(null);
   // the last line the twin said in a bubble, so it can own its jokes when the visitor asks about them
   const lastBubble = useRef<string | null>(null);
@@ -41,6 +50,15 @@ export default function Chat({ isOpen, setIsOpen, greetings, nudge }: ChatProps)
     }
   }, [isOpen]);
   const markReady = useCallback(() => setRobotReady(true), []);
+  const dropRobot = useCallback(() => {
+    setNoRobot(true);
+    setRobotReady(true);
+  }, []);
+  useEffect(() => {
+    if (robotReady) return;
+    const t = setTimeout(dropRobot, ROBOT_TIMEOUT_MS);
+    return () => clearTimeout(t);
+  }, [robotReady, dropRobot]);
 
   // the hello when the twin first appears, unless a nudge is already waiting
   useEffect(() => {
@@ -61,10 +79,6 @@ export default function Chat({ isOpen, setIsOpen, greetings, nudge }: ChatProps)
     return () => clearTimeout(t);
   }, [greeting]);
 
-  // r3f force-loses a canvas's WebGL context when it unmounts. In dev, StrictMode and Fast Refresh remount while reusing the same <canvas>,
-  // which left the robot blank. A new key gives a fresh <canvas> after every effect pass and after any real context loss.
-  const [canvasKey, setCanvasKey] = useState(0);
-  useEffect(() => setCanvasKey((k) => k + 1), []);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Auto-scroll to bottom of messages
@@ -188,22 +202,13 @@ export default function Chat({ isOpen, setIsOpen, greetings, nudge }: ChatProps)
         onMouseLeave={() => setIsHovered(false)}
         aria-label="Open Chat"
       >
-        {canvasKey > 0 && (
-        <Canvas
-          key={canvasKey}
-          style={{ width: '100%', height: '100%' }}
-          onCreated={({ gl }) => {
-            gl.domElement.addEventListener("webglcontextlost", (e) => {
-              e.preventDefault();
-              setCanvasKey((k) => k + 1);
-            });
-          }}
-        >
-          <PerspectiveCamera makeDefault position={[0, 1, 8]} />
-          <ambientLight intensity={1.5} />
-          <directionalLight position={[5, 10, 5]} intensity={2} color="#ffffff" />
-          {!isOpen && <ChatRobot hovered={isHovered} onReady={markReady} />}
-        </Canvas>
+        {noRobot ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img className={styles.avatar} src="/headshot-color.webp" alt="" />
+        ) : (
+          <CanvasBoundary fallback={null} onError={dropRobot}>
+            <RobotCanvas showRobot={!isOpen} hovered={isHovered} onReady={markReady} />
+          </CanvasBoundary>
         )}
       </button>
     </div>

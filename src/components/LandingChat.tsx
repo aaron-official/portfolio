@@ -3,7 +3,7 @@
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 
-// Three.js and the digital twin model (about 700 KB together) are fetched only after the page has finished loading and the browser is idle.
+// Three.js and the digital twin model (about 700 KB together) are fetched only after the page has finished loading and the browser is idle, and only on devices that can run WebGL.
 const Chat = dynamic(() => import("./Chat"), { ssr: false });
 
 const GREETINGS = [
@@ -26,6 +26,7 @@ type SlowConnection = { saveData?: boolean; effectiveType?: string };
 
 export function LandingChat() {
   const [load, setLoad] = useState(false);
+  const [lite, setLite] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [nudge, setNudge] = useState<string | null>(null);
 
@@ -51,9 +52,9 @@ export function LandingChat() {
   }, []);
 
   useEffect(() => {
-    // skip the heavy extras on data saver or very slow connections
+    // on data saver or very slow connections the twin still shows up, just with a photo instead of the 3D robot
     const c = (navigator as Navigator & { connection?: SlowConnection }).connection;
-    if (c?.saveData || (c?.effectiveType && /(^|-)2g$/.test(c.effectiveType))) return;
+    if (c?.saveData || (c?.effectiveType && /(^|-)2g$/.test(c.effectiveType))) setLite(true);
 
     let cancelled = false;
     let timer: ReturnType<typeof setTimeout> | undefined;
@@ -71,5 +72,5 @@ export function LandingChat() {
     };
   }, []);
 
-  return load ? <Chat isOpen={isOpen} setIsOpen={setIsOpen} greetings={GREETINGS} nudge={nudge} /> : null;
+  return load ? <Chat isOpen={isOpen} setIsOpen={setIsOpen} greetings={GREETINGS} nudge={nudge} lite={lite} /> : null;
 }

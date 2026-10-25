@@ -45,7 +45,9 @@ html { scrollbar-width: thin; scrollbar-color: #3a3832 #0e0e0c; }
   opacity: 0.04;
 }
 .world-exit { position: fixed; top: 16px; left: 16px; z-index: 1100; padding: 8px 14px; font-size: 0.85rem; color: #fff; background: rgba(4, 4, 5, 0.7); border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 6px; cursor: pointer; }
-.world-loading { position: fixed; inset: 0; z-index: 1000; display: grid; place-items: center; background: #0b0d12; color: #fff; font-family: monospace; }
+.world-loading { position: fixed; inset: 0; z-index: 1000; display: grid; place-items: center; align-content: center; gap: 16px; padding: 24px; text-align: center; background: #0b0d12; color: #fff; font-family: monospace; }
+.world-message { display: grid; gap: 16px; max-width: 420px; }
+.world-exit-inline { justify-self: center; padding: 10px 16px; border: 1px solid #fff; background: transparent; color: #fff; font: inherit; cursor: pointer; }
 
 
 /* Hologram UI Styles */

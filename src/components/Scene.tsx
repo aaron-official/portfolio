@@ -5,10 +5,10 @@ import { ThreeEvent } from "@react-three/fiber";
 import { Html, Text, Billboard } from "@react-three/drei";
 import * as THREE from "three";
 import Player from "./Player";
+import "../lib/draco";
 import { Island } from "./models/Island";
 import { Sky } from "./models/Sky";
 import { Bird } from "./models/Bird";
-import { Plane } from "./models/Plane";
 import { WanderingFox } from "./models/WanderingFox";
 import { WanderingRobot } from "./models/WanderingRobot";
 import { TimeOfDay } from "./World";
@@ -104,11 +104,6 @@ export default function Scene({ timeOfDay, isChatOpen }: SceneProps) {
 
       {/* Ambient Animated Objects */}
       <Bird />
-      <Plane 
-        position={[0, 2, 4]} 
-        scale={[0.5, 0.5, 0.5]} 
-        rotation={[0, Math.PI / 2, 0.2]} 
-      />
 
       {/* NPCs */}
       <WanderingFox initialPosition={[5, 0, 5]} bounds={12} />
@@ -140,6 +135,7 @@ export default function Scene({ timeOfDay, isChatOpen }: SceneProps) {
                 anchorY="middle"
                 outlineWidth={0.05}
                 outlineColor="#fff"
+                font="/fonts/Epilogue-Bold.ttf"
               >
                 {poi.label}
               </Text>

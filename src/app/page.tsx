@@ -159,7 +159,7 @@ export default function Home() {
 
       <section id="enter" className="portal-wrap">
         <EnterWorld className="portal">
-          <span className="mono">Wi-Fi recommended · ~5 MB of pure fun</span>
+          <span className="mono">Wi-Fi recommended · ~3 MB of pure fun</span>
           <span className="portal-title">Enter my <em>island</em> <b aria-hidden="true">↗</b></span>
         </EnterWorld>
       </section>
