@@ -179,7 +179,7 @@ export default function Home() {
             <span className="mono">Allergic to forms? Same</span>
             <span className="connect-title">Connect on <em>LinkedIn</em> <b aria-hidden="true">↗</b></span>
           </a>
-          <a className="connect" href="https://link.chess.com/play/SNdAkQ" target="_blank" rel="noopener noreferrer">
+          <a className="connect" href="https://www.chess.com/play/aar-on_bro" target="_blank" rel="noopener noreferrer">
             <span className="mono">Think you can win?</span>
             <span className="connect-title">Challenge me at <em>chess</em> <b aria-hidden="true">↗</b></span>
           </a>
