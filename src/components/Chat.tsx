@@ -35,8 +35,9 @@ export default function Chat({ isOpen, setIsOpen, greetings, nudge, lite }: Chat
   const [isLoading, setIsLoading] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   // no WebGL, a slow connection, or a robot that failed or took too long: the chat button shows the photo instead and everything else works
-  const [noRobot, setNoRobot] = useState(() => !!lite || !hasWebGL());
-  const [robotReady, setRobotReady] = useState(!greetings || noRobot);
+  const [noRobot, setNoRobot] = useState(() => !hasWebGL());
+  const photoOnly = noRobot || !!lite;
+  const [robotReady, setRobotReady] = useState(!greetings || photoOnly);
   const [greeting, setGreeting] = useState<string | null>(null);
   // the last line the twin said in a bubble, so it can own its jokes when the visitor asks about them
   const lastBubble = useRef<string | null>(null);
@@ -202,7 +203,7 @@ export default function Chat({ isOpen, setIsOpen, greetings, nudge, lite }: Chat
         onMouseLeave={() => setIsHovered(false)}
         aria-label="Open Chat"
       >
-        {noRobot ? (
+        {photoOnly ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img className={styles.avatar} src="/headshot-color.webp" alt="" />
         ) : (

@@ -27,8 +27,16 @@ type SlowConnection = { saveData?: boolean; effectiveType?: string };
 export function LandingChat() {
   const [load, setLoad] = useState(false);
   const [lite, setLite] = useState(false);
+  const [worldOpen, setWorldOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [nudge, setNudge] = useState<string | null>(null);
+
+  // the island has its own robot, and phones only allow a few WebGL contexts, so this one steps aside while the island is open
+  useEffect(() => {
+    const onWorld = (e: Event) => setWorldOpen((e as CustomEvent<boolean>).detail);
+    window.addEventListener("world-toggle", onWorld);
+    return () => window.removeEventListener("world-toggle", onWorld);
+  }, []);
 
   // the twin comments when the visitor reaches the work section and again at the footer
   useEffect(() => {
@@ -72,5 +80,10 @@ export function LandingChat() {
     };
   }, []);
 
-  return load ? <Chat isOpen={isOpen} setIsOpen={setIsOpen} greetings={GREETINGS} nudge={nudge} lite={lite} /> : null;
+  // hidden, not unmounted, while the island is open so the conversation survives the visit
+  return load ? (
+    <div hidden={worldOpen}>
+      <Chat isOpen={isOpen} setIsOpen={setIsOpen} greetings={GREETINGS} nudge={nudge} lite={lite || worldOpen} />
+    </div>
+  ) : null;
 }

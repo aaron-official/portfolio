@@ -30,6 +30,10 @@ export default function World({ onExit }: { onExit: () => void }) {
   const [webgl] = useState(hasWebGL);
   const [loaded, setLoaded] = useState(false);
   const [slow, setSlow] = useState(false);
+  // phones get a lighter island: no shadows, capped pixel density
+  const [touch] = useState(() => window.matchMedia("(pointer: coarse)").matches);
+  const [canvasKey, setCanvasKey] = useState(0);
+  const [lost, setLost] = useState(false);
   const markLoaded = () => setLoaded(true);
   useEffect(() => {
     if (loaded) return;
@@ -72,7 +76,22 @@ export default function World({ onExit }: { onExit: () => void }) {
     <div className="world-root">
       <main ref={setStage}>
         {stage && (
-        <Canvas shadows eventSource={stage} camera={{ position: [-2.6, 13.8, 20.7], fov: 45 }}>
+        <Canvas
+          key={canvasKey}
+          shadows={!touch}
+          dpr={touch ? [1, 1.25] : [1, 2]}
+          gl={{ powerPreference: "high-performance" }}
+          eventSource={stage}
+          camera={{ position: [-2.6, 13.8, 20.7], fov: 45 }}
+          onCreated={({ gl }) => {
+            // the browser can drop the context when the device runs short of graphics memory; let it come back, or offer a restart
+            gl.domElement.addEventListener("webglcontextlost", (e) => {
+              e.preventDefault();
+              setLost(true);
+            });
+            gl.domElement.addEventListener("webglcontextrestored", () => setLost(false));
+          }}
+        >
           <color attach="background" args={[ENV_COLORS[timeOfDay]]} />
           <fog attach="fog" args={[ENV_COLORS[timeOfDay], 10, 30]} />
           
@@ -100,7 +119,17 @@ export default function World({ onExit }: { onExit: () => void }) {
         )}
       </main>
 
-      {!loaded && (
+      {lost && (
+        <div className="world-loading">
+          <div className="world-message">
+            <p>The island ran out of graphics memory on this device.</p>
+            <button className="world-exit-inline" onClick={() => { setLost(false); setLoaded(false); setCanvasKey((k) => k + 1); }}>Restart the island</button>
+            <button className="world-exit-inline" onClick={onExit}>← Back to lite site</button>
+          </div>
+        </div>
+      )}
+
+      {!loaded && !lost && (
         <div className="world-loading">
           <p>{slow ? "Taking a while. If it never appears, your network may be blocking something." : "Loading the island…"}</p>
           {slow && <button className="world-exit-inline" onClick={onExit}>←︎ Back to lite site</button>}

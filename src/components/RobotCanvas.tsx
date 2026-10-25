@@ -17,6 +17,8 @@ export default function RobotCanvas({ showRobot, hovered, onReady }: { showRobot
     <Canvas
       key={canvasKey}
       style={{ width: "100%", height: "100%" }}
+      // measure the layout size: the button scales in with a CSS animation, and a transformed measurement left the robot tiny
+      resize={{ offsetSize: true }}
       onCreated={({ gl }) => {
         gl.domElement.addEventListener("webglcontextlost", (e) => {
           e.preventDefault();

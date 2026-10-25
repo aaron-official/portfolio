@@ -15,6 +15,7 @@ export function EnterWorld({ className, children }: { className?: string; childr
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
+    window.dispatchEvent(new CustomEvent("world-toggle", { detail: open }));
     return () => {
       document.body.style.overflow = "";
     };
