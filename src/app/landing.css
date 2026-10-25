@@ -47,6 +47,7 @@
 .pz-tile:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; z-index: 1; }
 .pz-board.is-solved .pz-tile { background-image: url("/headshot-color.webp"); border-color: transparent; cursor: default; }
 .pz-cap { display: flex; justify-content: space-between; gap: 12px; margin-top: 10px; color: var(--muted); }
+.pz-actions { display: flex; gap: 14px; }
 .pz-cap button { all: unset; cursor: pointer; color: var(--bone); }
 .pz-cap button:hover, .pz-cap button:focus-visible { color: var(--accent); }
 
