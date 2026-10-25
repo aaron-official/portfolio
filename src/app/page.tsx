@@ -32,6 +32,14 @@ const WORK = [
     link: { href: "https://tvpay.app", label: "tvpay.app" },
   },
   {
+    title: "SplitFair",
+    status: "May — Sep 2026",
+    summary: "Technical lead, Refactory apprenticeship team project",
+    text: "A platform where brands and agencies hire creators, fund the contract up front, and have the money split fairly between everyone who worked on it. I led a team of five and built the Rust API behind it (contracts, payments, payouts, a double-entry ledger, access control) and the Python workers that handle media, delivery, compliance checks and social verification.",
+    stack: ["Rust", "Python", "PostgreSQL", "Next.js", "React Native"],
+    link: { href: "https://splitfair.africa", label: "splitfair.africa" },
+  },
+  {
     title: "JijiLens",
     status: "Live demo",
     summary: "Search for products with a photo",
