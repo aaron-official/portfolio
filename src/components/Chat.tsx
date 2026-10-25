@@ -29,6 +29,17 @@ export default function Chat({ isOpen, setIsOpen, greetings, nudge }: ChatProps)
   const [isHovered, setIsHovered] = useState(false);
   const [robotReady, setRobotReady] = useState(!greetings);
   const [greeting, setGreeting] = useState<string | null>(null);
+  // the last line the twin said in a bubble, so it can own its jokes when the visitor asks about them
+  const lastBubble = useRef<string | null>(null);
+  useEffect(() => {
+    if (greeting) lastBubble.current = greeting;
+  }, [greeting]);
+  useEffect(() => {
+    if (isOpen && lastBubble.current) {
+      const said = lastBubble.current;
+      setMessages((prev) => (prev.length === 0 ? [{ id: 'bubble', role: 'assistant', content: said }] : prev));
+    }
+  }, [isOpen]);
   const markReady = useCallback(() => setRobotReady(true), []);
 
   // the hello when the twin first appears, unless a nudge is already waiting
@@ -78,7 +89,7 @@ export default function Chat({ isOpen, setIsOpen, greetings, nudge }: ChatProps)
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: newMessages })
+        body: JSON.stringify({ messages: newMessages.filter((m) => m.id !== 'bubble'), said: lastBubble.current })
       });
 
       if (!response.body) throw new Error("No response body");

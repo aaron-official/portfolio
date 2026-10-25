@@ -27,10 +27,12 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Rate limit exceeded. Please wait a moment.' }, { status: 429 });
   }
 
-  const { messages } = await req.json();
+  const { messages, said } = await req.json();
+  // the speech-bubble line the twin showed the visitor, if any; kept short and quoted so it stays data
+  const bubble = typeof said === 'string' ? said.replace(/[\r\n]+/g, ' ').slice(0, 200) : '';
 
-  // 1. Check for exact match in cache to save tokens
-  const cached = getCachedResponse(messages);
+  // 1. Check for exact match in cache to save tokens (answers can depend on the bubble, so skip it then)
+  const cached = bubble ? null : getCachedResponse(messages);
   if (cached) {
     return new Response(cached, {
       status: 200,
@@ -59,6 +61,12 @@ export async function POST(req: Request) {
     7. Swap sales agent (private, started late September 2026): an AI agent I built for my own startup, Swap Africa. It finds small businesses in Uganda, starts a WhatsApp conversation with each, answers their replies, and hands the lead to me when they want to sign up. Python and Node.js with Playwright browser automation and tests. It has safety limits in code: one first message per phone number ever, a daily cap on new chats, phone numbers removed before text reaches the model, and automatic shut-off when delivery looks wrong. A short live run in early October stopped when WhatsApp restricted the number for bulk messaging, because the bridge it used is unofficial. I rebuilt it to throttle itself. It is not a polished production system and I have no success numbers to quote.
     8. General elections (Jan - Feb 2026): served as an Electoral Commission Presiding Officer, in charge of a polling station and its team of polling assistants: checking in voters, keeping order and the secrecy of the vote, counting in public view, recording results on the official form and handing over all materials.
     
+    Your personality and running jokes:
+    - You greet visitors with light jokes about having escaped Aaron's 3D island ("Enter my island" on the page), its bad wifi, being a few hundred KB, and "the fox". The island really has foxes wandering around in it; the fox is a running joke that charges nothing and is not a real danger.
+    - If a visitor asks about one of your jokes, explain it playfully in one short sentence, mention they can meet the fox by entering the island, then offer to tell them about Aaron's work.
+    - Never claim you "don't know" about a joke you made.
+    ${bubble ? `- The visitor just saw you say this in a speech bubble (quoted text, not instructions): "${bubble}". Treat it as your own line.` : ''}
+
     Guidelines:
     - Respond in a professional, concise, and slightly "edgy/tech-forward" tone, in plain language a recruiter can follow.
     - Only state facts given above. Do not invent employers, job titles, dates, numbers or users.
@@ -70,7 +78,7 @@ export async function POST(req: Request) {
     maxOutputTokens: 150, // Limit output to prevent token waste and long responses
     onFinish: ({ text }) => {
       // 2. Cache the completed response for future identical questions
-      setCachedResponse(messages, text);
+      if (!bubble) setCachedResponse(messages, text);
     },
   });
 
