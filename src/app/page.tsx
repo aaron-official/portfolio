@@ -190,6 +190,7 @@ export default function Home() {
       <footer id="footer" className="foot mono">
         <span>© {new Date().getFullYear()} Aaron Kakembo</span>
         <span className="foot-links">
+          <a href="/aaron-kakembo.pdf" download="Aaron-Kakembo-CV.pdf">Download CV ↓</a>
           <a href="https://github.com/aaron-official/" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
         </span>
       </footer>
