@@ -113,7 +113,7 @@
 .portal::before { content: ""; position: absolute; inset: 0; z-index: -1; background: var(--accent); transform: translateX(-101%); transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); }
 .portal .mono { display: block; color: var(--muted); transition: color 0.35s; }
 .portal-title { display: block; font: 400 clamp(3.2rem, 13vw, 14rem)/0.95 var(--display); letter-spacing: -0.035em; padding-bottom: 0.06em; }
-.portal-title b { display: inline-block; font-weight: 400; transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.portal-title b { display: inline-block; font-weight: 400; line-height: 1; transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1); }
 .portal:hover, .portal:focus-visible { color: var(--ink); }
 .portal:hover::before, .portal:focus-visible::before { transform: translateX(0); }
 .portal:hover .mono, .portal:focus-visible .mono { color: var(--ink); }
@@ -209,3 +209,5 @@
   .tech { overflow-x: auto; mask-image: none; -webkit-mask-image: none; }
   .lite *, .lite *::before, .lite *::after { animation: none !important; transition: none !important; }
 }
+
+.arrow { display: inline-block; width: 0.95em; height: 0.95em; vertical-align: -0.08em; }

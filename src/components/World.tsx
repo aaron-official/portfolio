@@ -20,7 +20,7 @@ export function WorldMessage({ onExit, children }: { onExit: () => void; childre
     <div className="world-loading">
       <div className="world-message">
         <p>{children}</p>
-        <button className="world-exit-inline" onClick={onExit}>← Back to lite site</button>
+        <button className="world-exit-inline" onClick={onExit}>←︎ Back to lite site</button>
       </div>
     </div>
   );
@@ -103,11 +103,11 @@ export default function World({ onExit }: { onExit: () => void }) {
       {!loaded && (
         <div className="world-loading">
           <p>{slow ? "Taking a while. If it never appears, your network may be blocking something." : "Loading the island…"}</p>
-          {slow && <button className="world-exit-inline" onClick={onExit}>← Back to lite site</button>}
+          {slow && <button className="world-exit-inline" onClick={onExit}>←︎ Back to lite site</button>}
         </div>
       )}
 
-      <button className="world-exit" onClick={onExit}>← Back to lite site</button>
+      <button className="world-exit" onClick={onExit}>←︎ Back to lite site</button>
       <Chat isOpen={isChatOpen} setIsOpen={setIsChatOpen} />
     </div>
   );

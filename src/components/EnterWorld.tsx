@@ -31,7 +31,7 @@ export function EnterWorld({ className, children }: { className?: string; childr
             <div className="world-loading">
               <div className="world-message">
                 <p>The island couldn&apos;t load on this device or network.</p>
-                <button className="world-exit-inline" onClick={() => setOpen(false)}>← Back to lite site</button>
+                <button className="world-exit-inline" onClick={() => setOpen(false)}>←︎ Back to lite site</button>
               </div>
             </div>
           }

@@ -65,6 +65,15 @@ const WORK = [
   },
 ];
 
+// drawn as an SVG so phones can't swap the glyph for a colour emoji
+function Arrow() {
+  return (
+    <svg className="arrow" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="square">
+      <path d="M6 18 18 6M8 6h10v10" />
+    </svg>
+  );
+}
+
 const STACK = ["Python", "TypeScript", "Rust", "FastAPI", "Next.js / React", "PostgreSQL", "Supabase", "Docker", "LangGraph", "CrewAI"];
 
 export default function Home() {
@@ -96,7 +105,7 @@ export default function Home() {
             <li>Full-Stack</li>
             <li>AI Engineer</li>
           </ul>
-          <div className="scroll mono">Scroll ↓</div>
+          <div className="scroll mono">Scroll ↓︎</div>
         </div>
       </section>
 
@@ -126,7 +135,7 @@ export default function Home() {
                   <p className="tags mono">
                     {w.stack.join(" / ")}
                     {w.link && (
-                      <a className="proj-link" href={w.link.href} target="_blank" rel="noopener noreferrer">{w.link.label} ↗</a>
+                      <a className="proj-link" href={w.link.href} target="_blank" rel="noopener noreferrer">{w.link.label} ↗︎</a>
                     )}
                   </p>
                 </div>
@@ -160,7 +169,7 @@ export default function Home() {
       <section id="enter" className="portal-wrap">
         <EnterWorld className="portal">
           <span className="mono">Wi-Fi recommended · ~3 MB of pure fun</span>
-          <span className="portal-title">Enter my <em>island</em> <b aria-hidden="true">↗</b></span>
+          <span className="portal-title">Enter my <em>island</em> <b aria-hidden="true"><Arrow /></b></span>
         </EnterWorld>
       </section>
 
@@ -177,11 +186,11 @@ export default function Home() {
           <div className="connect-col">
           <a className="connect" href="https://www.linkedin.com/in/aaron-kakembo-468042321/" target="_blank" rel="noopener noreferrer">
             <span className="mono">Allergic to forms? Same</span>
-            <span className="connect-title">Connect on <em>LinkedIn</em> <b aria-hidden="true">↗</b></span>
+            <span className="connect-title">Connect on <em>LinkedIn</em> <b aria-hidden="true"><Arrow /></b></span>
           </a>
           <a className="connect" href="https://www.chess.com/play/aar-on_bro" target="_blank" rel="noopener noreferrer">
             <span className="mono">Think you can win?</span>
-            <span className="connect-title">Challenge me at <em>chess</em> <b aria-hidden="true">↗</b></span>
+            <span className="connect-title">Challenge me at <em>chess</em> <b aria-hidden="true"><Arrow /></b></span>
           </a>
           </div>
         </div>
@@ -190,8 +199,8 @@ export default function Home() {
       <footer id="footer" className="foot mono">
         <span>© {new Date().getFullYear()} Aaron Kakembo</span>
         <span className="foot-links">
-          <a href="/aaron-kakembo.pdf" download="Aaron-Kakembo-CV.pdf">Download CV ↓</a>
-          <a href="https://github.com/aaron-official/" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+          <a href="/aaron-kakembo.pdf" download="Aaron-Kakembo-CV.pdf">Download CV ↓︎</a>
+          <a href="https://github.com/aaron-official/" target="_blank" rel="noopener noreferrer">GitHub ↗︎</a>
         </span>
       </footer>
       <LandingChat />

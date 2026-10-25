@@ -169,14 +169,14 @@ export function Puzzle({ className }: { className?: string }) {
         {solved ? (
           <>
             <span>{verdict(moves, helped)}</span>
-            <button type="button" onClick={shuffle}>Again ↻</button>
+            <button type="button" onClick={shuffle}>Again ↻︎</button>
           </>
         ) : (
           <>
             <span>{auto ? "Solving…" : `Solve me${moves ? ` · ${moves}` : ""}`}</span>
             <span className="pz-actions">
               {moves >= HELP_AFTER && !auto && <button type="button" onClick={autoSolve}>Auto-solve ✦</button>}
-              <button type="button" onClick={shuffle}>Shuffle ↻</button>
+              <button type="button" onClick={shuffle}>Shuffle ↻︎</button>
             </span>
           </>
         )}
