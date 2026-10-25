@@ -112,7 +112,7 @@ export default function Scene({ timeOfDay, isChatOpen }: SceneProps) {
       
       {/* Dynamic Chat Robot */}
       {isChatOpen && (
-        <WanderingRobot initialPosition={[-6, 0, 8]} bounds={4} />
+        <WanderingRobot initialPosition={[-1, 0, 6]} bounds={4} />
       )}
 
       <Player initialPosition={[-10, 0, 5]} targetPosition={targetPosition} onPositionUpdate={handlePlayerMove} />

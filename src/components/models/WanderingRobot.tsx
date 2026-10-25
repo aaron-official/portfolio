@@ -11,6 +11,8 @@ interface WanderingRobotProps {
   bounds: number;
 }
 
+const PLAYS = ["Wave", "Dance", "ThumbsUp", "Jump", "Yes"];
+
 export function WanderingRobot({ initialPosition, bounds }: WanderingRobotProps) {
   const groupRef = useRef<THREE.Group>(null);
   const { scene, animations } = useGLTF("/models/RobotExpressive.glb");
@@ -20,6 +22,9 @@ export function WanderingRobot({ initialPosition, bounds }: WanderingRobotProps)
   const clone = useMemo(() => SkeletonUtils.clone(scene), [scene]);
   
   const [animation, setAnimation] = useState<"Idle" | "Walking">("Idle");
+  // when it stops walking it sometimes plays: waves, dances, jumps. It also hops in when the chat opens.
+  const [play, setPlay] = useState<string | null>("Jump");
+  const current = animation === "Walking" ? "Walking" : (play ?? "Idle");
   const [targetPosition, setTargetPosition] = useState(
     new THREE.Vector3(initialPosition[0], initialPosition[1], initialPosition[2])
   );
@@ -32,11 +37,21 @@ export function WanderingRobot({ initialPosition, bounds }: WanderingRobotProps)
     Object.values(actions).forEach(action => action?.fadeOut(0.2));
     
     // Play the new animation
-    const newAction = actions[animation];
+    const newAction = actions[current];
     if (newAction) {
       newAction.reset().fadeIn(0.2).play();
     }
-  }, [animation, actions]);
+  }, [current, actions]);
+
+  useEffect(() => {
+    if (play) {
+      const t = setTimeout(() => setPlay(null), 2400);
+      return () => clearTimeout(t);
+    }
+    if (animation !== "Idle") return;
+    const t = setTimeout(() => setPlay(PLAYS[Math.floor(Math.random() * PLAYS.length)]), 2500 + Math.random() * 3500);
+    return () => clearTimeout(t);
+  }, [play, animation]);
 
   // Logic to pick a new random destination periodically
   useEffect(() => {
@@ -63,12 +78,19 @@ export function WanderingRobot({ initialPosition, bounds }: WanderingRobotProps)
   useFrame((state, delta) => {
     if (!groupRef.current) return;
 
+    // pop in from nothing
+    const s = THREE.MathUtils.lerp(groupRef.current.scale.x, 0.7, 6 * delta);
+    groupRef.current.scale.setScalar(s);
+
     const currentPos = groupRef.current.position;
     const distanceToTarget = currentPos.distanceTo(targetPosition);
     
     // Manage animations and movement based on distance
     if (distanceToTarget > 0.5) {
-      if (animation !== "Walking") setAnimation("Walking");
+      if (animation !== "Walking") {
+        setAnimation("Walking");
+        setPlay(null);
+      }
       
       // Move towards target
       currentPos.lerp(targetPosition, 1.5 * delta);
@@ -87,7 +109,7 @@ export function WanderingRobot({ initialPosition, bounds }: WanderingRobotProps)
   });
 
   return (
-    <group ref={groupRef} position={initialPosition} scale={[0.5, 0.5, 0.5]} dispose={null}>
+    <group ref={groupRef} position={initialPosition} scale={[0.01, 0.01, 0.01]} dispose={null}>
       {/* Scale applied to group, not the shared scene primitive */}
       <primitive object={clone} />
     </group>
